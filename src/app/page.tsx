@@ -1,5 +1,5 @@
-import { PhoneLoginView } from "@/components/views/phone-login-view";
+import { GoogleLoginView } from "@/components/views/google-login-view";
 
 export default function LoginPage() {
-  return <PhoneLoginView />;
+  return <GoogleLoginView />;
 }
