@@ -1,0 +1,76 @@
+{
+  "placeholderImages": [
+    {
+      "id": "hero-banner",
+      "description": "Subtle background image of a holy site for the hero banner.",
+      "imageUrl": "https://images.pexels.com/photos/32290182/pexels-photo-32290182.jpeg?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mecca pilgrimage"
+    },
+    {
+      "id": "package-1",
+      "description": "Image for the first featured package.",
+      "imageUrl": "https://images.unsplash.com/photo-1723119832675-0031e0f0408c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxsdXh1cnklMjBob3RlbHxlbnwwfHx8fDE3NTkyNDMzMTh8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "luxury hotel"
+    },
+    {
+      "id": "package-2",
+      "description": "Image for the second featured package.",
+      "imageUrl": "https://images.unsplash.com/photo-1661630819848-bdb52783d1b0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxjaXR5c2NhcGUlMjBkdWJhaXxlbnwwfHx8fDE3NTkzMTY0MjR8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cityscape dubai"
+    },
+    {
+      "id": "package-3",
+      "description": "Image for the third featured package.",
+      "imageUrl": "https://images.unsplash.com/photo-1603277103691-756354934c2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxhaXJwbGFuZSUyMHdpbmRvd3xlbnwwfHx8fDE3NTkyNTA0MTV8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "airplane window"
+    },
+    {
+      "id": "package-4",
+      "description": "Image for the fourth featured package.",
+      "imageUrl": "https://images.unsplash.com/photo-1495846192701-65d0d48e66fe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxtb3NxdWUlMjBpbnRlcmlvcnxlbnwwfHx8fDE3NTkzMDMxMTZ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "mosque interior"
+    },
+    {
+      "id": "package-5",
+      "description": "Image for the fifth featured package.",
+      "imageUrl": "https://images.unsplash.com/photo-1590490360182-c33d57733427?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxob3RlbCUyMHJvb218ZW58MHx8fHwxNzU5Mjk4MTg1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "hotel room"
+    },
+    {
+      "id": "package-6",
+      "description": "Image for the sixth featured package.",
+      "imageUrl": "https://images.unsplash.com/photo-1541789094913-f3809a8f3ba5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxkZXNlcnQlMjBsYW5kc2NhcGV8ZW58MHx8fHwxNzU5MzA2NTg1fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "desert landscape"
+    },
+    {
+      "id": "package-7",
+      "description": "Image for the seventh featured package.",
+      "imageUrl": "https://images.unsplash.com/photo-1529619768328-e37af76c6fe5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHxjaXR5JTIwbmlnaHR8ZW58MHx8fHwxNzU5MjM2Mjg0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "city night"
+    },
+    {
+      "id": "package-8",
+      "description": "Image for the eighth featured package.",
+      "imageUrl": "https://images.unsplash.com/photo-1712797980891-64891f1d36ae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw4fHxwcmF5ZXIlMjBoYWxsfGVufDB8fHx8MTc1OTIyNjkzNXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "prayer hall"
+    },
+    {
+      "id": "testimonial-1",
+      "description": "Avatar for the first testimonial.",
+      "imageUrl": "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw0fHxwZXJzb24lMjBwb3J0cmFpdHxlbnwwfHx8fDE3NTkzMDY0NTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "person portrait"
+    },
+    {
+      "id": "testimonial-2",
+      "description": "Avatar for the second testimonial.",
+      "imageUrl": "https://images.unsplash.com/photo-1525134479668-1bee5c7c6845?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHx3b21hbiUyMHNtaWxpbmd8ZW58MHx8fHwxNzU5MjMzMTk0fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "woman smiling"
+    },
+    {
+      "id": "testimonial-3",
+      "description": "Avatar for the third testimonial.",
+      "imageUrl": "https://images.unsplash.com/photo-1706645571146-8684302501a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxtYW4lMjBwcm9mZXNzaW9uYWx8ZW58MHx8fHwxNzU5Mjk1NTA3fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "man professional"
+    }
+  ]
+}
