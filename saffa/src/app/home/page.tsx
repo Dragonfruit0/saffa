@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -13,12 +12,14 @@ import { About } from '@/components/sections/about';
 import { Testimonials } from '@/components/sections/testimonials';
 import { ComparisonDialog } from '@/components/comparison-dialog';
 import { Button } from '@/components/ui/button';
-import { GitCompare } from 'lucide-react';
+import { GitCompare, User } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function HomePage() {
   const [packages, setPackages] = useState<Package[]>([]);
   const [comparedPackages, setComparedPackages] = useState<Package[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -59,8 +60,8 @@ export default function HomePage() {
         <Testimonials />
       </main>
       <Footer />
-      {comparedPackages.length > 0 && (
-        <div className="fixed bottom-6 right-6 z-50 animate-in fade-in-0 zoom-in-95">
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col items-end space-y-4 animate-in fade-in-0 zoom-in-95">
+        {comparedPackages.length > 0 && (
           <Button 
             size="lg" 
             onClick={() => setIsDialogOpen(true)} 
@@ -71,8 +72,16 @@ export default function HomePage() {
             Compare ({comparedPackages.length})
             {comparedPackages.length < 2 && <span className="ml-2 text-xs opacity-80">(Select 2+)</span>}
           </Button>
-        </div>
-      )}
+        )}
+        <Button 
+          size="lg" 
+          onClick={() => router.push('/profile')} 
+          className="rounded-full shadow-2xl"
+        >
+          <User className="mr-2 h-5 w-5" />
+          Go to Profile
+        </Button>
+      </div>
       <ComparisonDialog 
         open={isDialogOpen} 
         onOpenChange={setIsDialogOpen} 

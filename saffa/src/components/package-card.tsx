@@ -10,13 +10,13 @@ import { Plane, Clock, Utensils, MapPin } from "lucide-react";
 
 interface PackageCardProps {
   package: Package;
-  onCompareToggle: (pkg: Package, isSelected: boolean) => void;
+  onCompareToggle: (pkg: Package) => void;
   isSelected: boolean;
 }
 
 export function PackageCard({ package: pkg, onCompareToggle, isSelected }: PackageCardProps) {
-  const handleCheckedChange = (checked: boolean | 'indeterminate') => {
-    onCompareToggle(pkg, !!checked);
+  const handleCheckedChange = () => {
+    onCompareToggle(pkg);
   };
 
   return (
@@ -24,16 +24,17 @@ export function PackageCard({ package: pkg, onCompareToggle, isSelected }: Packa
       <div className="relative h-48 w-full">
         <Image 
           src={pkg.imageUrl} 
-          alt={pkg.packageName} 
+          alt={pkg.name} 
           data-ai-hint={pkg.imageHint}
           fill 
           className="object-cover" 
         />
+         <Badge className="absolute top-2 right-2">{pkg.category}</Badge>
       </div>
       <CardHeader>
-        <CardTitle className="text-lg font-headline tracking-tight">{pkg.packageName}</CardTitle>
+        <CardTitle className="text-lg font-headline tracking-tight">{pkg.name}</CardTitle>
         <div className="flex items-baseline gap-2">
-            <p className="text-2xl font-bold text-primary" dangerouslySetInnerHTML={{ __html: `&#8377;${pkg.price.toLocaleString('en-IN')}` }}></p>
+            <p className="text-2xl font-bold text-primary">INR {pkg.price.toLocaleString('en-IN')}</p>
             <span className="text-sm text-muted-foreground">/person</span>
         </div>
       </CardHeader>
@@ -51,12 +52,15 @@ export function PackageCard({ package: pkg, onCompareToggle, isSelected }: Packa
           <span>{pkg.distanceFromHaram} from Haram</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
+            <MapPin className="h-4 w-4 text-primary/80" />
+            <span>{pkg.distanceFromMasjidENabawi} from Masjid e Nabawi</span>
+        </div>
+        <div className="flex items-center gap-2 text-muted-foreground">
           <Utensils className="h-4 w-4 text-primary/80" />
           <span>Food: {pkg.food}</span>
         </div>
       </CardContent>
       <CardFooter className="bg-muted/40 p-4 flex justify-between items-center">
-        {pkg.ziyaratGuide && <Badge variant="secondary">Ziyarat Guide</Badge>}
         <div className="flex items-center space-x-2 ml-auto">
           <Checkbox 
             id={`compare-${pkg.id}`} 

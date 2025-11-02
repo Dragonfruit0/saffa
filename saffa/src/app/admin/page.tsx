@@ -4,7 +4,7 @@
 import { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import type { Package, Testimonial } from '@/lib/types';
+import type { Package, Testimonial, PackageCategory } from '@/lib/types';
 
 export default function AdminPage() {
   // Package State
@@ -13,9 +13,10 @@ export default function AdminPage() {
   const [price, setPrice] = useState('');
   const [duration, setDuration] = useState('');
   const [airline, setAirline] = useState('');
-  const [departureLocation, setDepartureLocation] = useState('');
   const [food, setFood] = useState('');
   const [distanceFromHaram, setDistanceFromHaram] = useState('');
+  const [distanceFromMasjidENabawi, setDistanceFromMasjidENabawi] = useState('');
+  const [category, setCategory] = useState<PackageCategory>('Economy');
 
   // Testimonial State
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
@@ -44,14 +45,17 @@ export default function AdminPage() {
     e.preventDefault();
     try {
       await addDoc(collection(db, 'packages'), {
-        packageName,
+        name: packageName,
         price: Number(price),
         duration,
+        description: '', // You may want to add a description field
+        location: '', // You may want to add a location field
         airline,
-        departureLocation,
+        departureLocation: 'Hyderabad',
         food,
         distanceFromHaram,
-        ziyaratGuide: false, // Default value
+        distanceFromMasjidENabawi,
+        category,
         imageUrl: '', // Default value
         imageHint: '' // Default value
       });
@@ -61,9 +65,10 @@ export default function AdminPage() {
       setPrice('');
       setDuration('');
       setAirline('');
-      setDepartureLocation('');
       setFood('');
       setDistanceFromHaram('');
+      setDistanceFromMasjidENabawi('');
+      setCategory('Economy');
     } catch (error) {
       console.error('Error adding package: ', error);
     }
@@ -107,6 +112,8 @@ export default function AdminPage() {
     }
   };
 
+  const packageCategories: PackageCategory[] = ['Economy', 'Deluxe', 'Luxury', 'Family', 'Group', 'Private'];
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-4xl font-bold mb-10">Super Admin</h1>
@@ -120,16 +127,24 @@ export default function AdminPage() {
             <input type="number" placeholder="Price" value={price} onChange={e => setPrice(e.target.value)} className="p-2 border rounded" />
             <input type="text" placeholder="Duration" value={duration} onChange={e => setDuration(e.target.value)} className="p-2 border rounded" />
             <input type="text" placeholder="Airline" value={airline} onChange={e => setAirline(e.target.value)} className="p-2 border rounded" />
-            <input type="text" placeholder="Departure Location" value={departureLocation} onChange={e => setDepartureLocation(e.target.value)} className="p-2 border rounded" />
             <input type="text" placeholder="Food" value={food} onChange={e => setFood(e.target.value)} className="p-2 border rounded" />
             <input type="text" placeholder="Distance from Haram" value={distanceFromHaram} onChange={e => setDistanceFromHaram(e.target.value)} className="p-2 border rounded" />
+            <input type="text" placeholder="Distance from Masjid e Nabawi" value={distanceFromMasjidENabawi} onChange={e => setDistanceFromMasjidENabawi(e.target.value)} className="p-2 border rounded" />
+            <select value={category} onChange={e => setCategory(e.target.value as PackageCategory)} className="p-2 border rounded">
+              {packageCategories.map(cat => (
+                <option key={cat} value={cat}>{cat}</option>
+              ))}
+            </select>
           </div>
           <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">Add Package</button>
         </form>
         <div className="space-y-2">
           {packages.map(pkg => (
             <div key={pkg.id} className="flex items-center justify-between p-2 border rounded">
-              <span>{pkg.packageName}</span>
+              <div>
+                <span className="font-bold">{pkg.name}</span>
+                <span className="text-sm text-gray-500 ml-2">({pkg.category})</span>
+              </div>
               <button onClick={() => handleDeletePackage(pkg.id)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
             </div>
           ))}

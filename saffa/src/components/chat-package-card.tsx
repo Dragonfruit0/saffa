@@ -24,7 +24,7 @@ export function ChatPackageCard({ package: pkg }: ChatPackageCardProps) {
       <div className="flex flex-col justify-between p-3 flex-grow">
         <div>
             <h3 className="text-sm font-semibold tracking-tight leading-snug">{pkg.packageName}</h3>
-            <p className="text-lg font-bold text-primary mt-1" dangerouslySetInnerHTML={{ __html: `&#8377;${pkg.price.toLocaleString('en-IN')}` }}></p>
+            <p className="text-lg font-bold text-primary mt-1">INR {pkg.price.toLocaleString('en-IN')}</p>
             <div className="grid grid-cols-2 gap-x-2 gap-y-1 text-xs text-muted-foreground mt-2">
                 <div className="flex items-center gap-1.5">
                     <Clock className="h-3 w-3 text-primary/80" />

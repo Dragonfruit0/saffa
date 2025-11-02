@@ -1,5 +1,14 @@
-import { GoogleLoginView } from "@/components/views/google-login-view";
+'use client';
 
-export default function LoginPage() {
-  return <GoogleLoginView />;
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function RootPage() {
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/signup');
+  }, [router]);
+
+  return null;
 }

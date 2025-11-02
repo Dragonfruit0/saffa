@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Facebook, Linkedin } from "lucide-react";
+import { Linkedin, MessageCircle } from "lucide-react";
 import { Logo } from "@/components/ui/logo";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,17 +15,12 @@ export function Footer() {
               Your one-stop platform to find, compare, and book the perfect Umrah and Hajj packages. We bring transparency and ease to your spiritual journey.
             </p>
             <div className="flex items-center gap-2 mt-2">
-              <Link href="#" aria-label="Instagram">
+              <Link href="https://api.whatsapp.com/send/?phone=919908829096&text=I+came+from+Safamarwah.in&type=phone_number&app_absent=0" aria-label="WhatsApp">
                 <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                  <Instagram className="h-5 w-5" />
+                  <MessageCircle className="h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="#" aria-label="Facebook">
-                <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
-                  <Facebook className="h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="#" aria-label="LinkedIn">
+              <Link href="https://www.linkedin.com/company/safamarwah/" aria-label="LinkedIn">
                 <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground">
                   <Linkedin className="h-5 w-5" />
                 </Button>

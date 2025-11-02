@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { getRecommendedPackages } from '@/app/actions';
+// import { getRecommendedPackages } from '@/app/actions';
 import type { Package } from '@/lib/types';
 
 import { SiteHeader } from '@/components/layout/header';
@@ -42,29 +42,29 @@ export default function ChatPage() {
       setInput('');
       setIsLoading(true);
 
-      const result = await getRecommendedPackages({ 
-        userPrompt: input,
-        priceRange: 'Any',
-        airlinePreference: 'Any',
-        ziyaratGuideAvailability: false,
-        departureLocation: 'Any',
-        duration: 'Any',
-        foodPreference: 'Any',
-        distanceFromHaram: 'Any',
-      });
+      // const result = await getRecommendedPackages({ 
+      //   userPrompt: input,
+      //   priceRange: 'Any',
+      //   airlinePreference: 'Any',
+      //   ziyaratGuideAvailability: false,
+      //   departureLocation: 'Any',
+      //   duration: 'Any',
+      //   foodPreference: 'Any',
+      //   distanceFromHaram: 'Any',
+      // });
 
-      if (result.success && result.data && result.data.length > 0) {
-        const newPackagesMessage: Message = { role: 'assistant-packages', content: result.data };
-        setMessages(prev => [...prev, newPackagesMessage]);
-      } else {
-        const errorMessage: Message = { role: 'assistant', content: result.error || "I couldn't find any packages matching your request. Could you try being more specific?" };
-        setMessages(prev => [...prev, errorMessage]);
-        toast({
-          variant: 'destructive',
-          title: 'Search Failed',
-          description: result.error || 'Please try again.',
-        });
-      }
+      // if (result.success && result.data && result.data.length > 0) {
+      //   const newPackagesMessage: Message = { role: 'assistant-packages', content: result.data };
+      //   setMessages(prev => [...prev, newPackagesMessage]);
+      // } else {
+      //   const errorMessage: Message = { role: 'assistant', content: result.error || "I couldn't find any packages matching your request. Could you try being more specific?" };
+      //   setMessages(prev => [...prev, errorMessage]);
+      //   toast({
+      //     variant: 'destructive',
+      //     title: 'Search Failed',
+      //     description: result.error || 'Please try again.',
+      //   });
+      // }
       
       setIsLoading(false);
     }
@@ -119,7 +119,7 @@ export default function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="e.g., 'I am looking for a 10 day package under ₹1,50,000...'"
+              placeholder="e.g., 'I am looking for a 10 day package under INR 1,50,000...'"
               className="pr-12"
               disabled={isLoading}
             />
