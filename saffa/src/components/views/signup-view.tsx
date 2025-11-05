@@ -8,11 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { onAuthStateChanged, User, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { FirebaseError } from "firebase/app";
 import { Loader2 } from "lucide-react";
+import Image from 'next/image';
+import { trackLogin } from "@/lib/analytics";
 
 export function SignupView() {
   const [step, setStep] = useState(1);
@@ -22,21 +24,25 @@ export function SignupView() {
   const [isFetchingLocation, setIsFetchingLocation] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get('redirect');
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       if (currentUser) {
+        trackLogin();
         const userDocRef = doc(db, 'users', currentUser.uid);
         const userDoc = await getDoc(userDocRef);
 
         if (userDoc.exists() && userDoc.data()?.dob) {
-          router.push('/home');
+          router.push(redirect || '/home');
         } else {
           setUser(currentUser);
           setFormData((prevData: any) => ({
             ...prevData,
             name: currentUser.displayName || '',
             email: currentUser.email || '',
+            phoneNumber: currentUser.phoneNumber || '',
           }));
           setStep(2);
         }
@@ -46,11 +52,12 @@ export function SignupView() {
       }
     });
     return () => unsubscribe();
-  }, [router]);
+  }, [router, redirect]);
 
   const onGoogleSubmit = async () => {
     setIsLoading(true);
     const provider = new GoogleAuthProvider();
+    provider.addScope('https://www.googleapis.com/auth/user.phonenumbers.read');
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
@@ -153,13 +160,14 @@ export function SignupView() {
       return;
     }
 
-    const { name, gender, dob, street, city, state, zip, country } = formData;
+    const { name, gender, dob, street, city, state, zip, country, phoneNumber } = formData;
 
     const userProfile = {
       uid: user.uid,
       name: name || user.displayName,
       email: user.email,
       photoURL: user.photoURL,
+      phoneNumber: phoneNumber || user.phoneNumber,
       gender: gender,
       dob: dob,
       address: {
@@ -174,7 +182,7 @@ export function SignupView() {
     try {
       await setDoc(doc(db, "users", user.uid), userProfile, { merge: true });
       toast({ title: "Success", description: "Your profile has been updated." });
-      router.push("/home");
+      router.push(redirect || "/home");
     } catch (error) {
       console.error("Error updating profile: ", error);
       toast({ title: "Error", description: "There was an error updating your profile." });
@@ -184,8 +192,10 @@ export function SignupView() {
   return (
     <div className="flex justify-center items-center h-screen">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Sign Up</CardTitle>
+        <CardHeader className="text-center">
+        <Image src="/images/safamarwahlogo.jpg" alt="SafaMarwah Logo" width={100} height={100} className="mx-auto" />
+          <CardTitle className="text-2xl font-bold">SafaMarwah</CardTitle>
+          <p className="text-muted-foreground">Your trusted partner in spiritual journeys</p>
         </CardHeader>
         <CardContent>
           {step === 1 && (
@@ -201,6 +211,8 @@ export function SignupView() {
             <div>
               <Label htmlFor="name">Name</Label>
               <Input id="name" name="name" value={formData.name || ''} onChange={handleChange} />
+              <Label htmlFor="phoneNumber">Phone Number</Label>
+              <Input id="phoneNumber" name="phoneNumber" value={formData.phoneNumber || ''} onChange={handleChange} />
               <Label htmlFor="gender">Gender</Label>
               <Select onValueChange={(value) => handleSelectChange("gender", value)}>
                 <SelectTrigger>

@@ -1,14 +1,14 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-// import { getRecommendedPackages } from '@/app/actions';
+import { getRecommendedPackages, getAiPreferences } from '@/app/actions';
 import type { Package } from '@/lib/types';
 
-import { SiteHeader } from '@/components/layout/header';
+import { Header } from '@/components/layout/header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Send, Sparkles, Loader2 } from 'lucide-react';
+import { Send, Sparkles, Loader2, AlertTriangle } from 'lucide-react';
 import { ChatPackageCard } from '@/components/chat-package-card';
 import { useToast } from '@/hooks/use-toast';
 
@@ -39,32 +39,26 @@ export default function ChatPage() {
     if (input.trim() && !isLoading) {
       const newUserMessage: Message = { role: 'user', content: input };
       setMessages(prev => [...prev, newUserMessage]);
+      const currentInput = input;
       setInput('');
       setIsLoading(true);
 
-      // const result = await getRecommendedPackages({ 
-      //   userPrompt: input,
-      //   priceRange: 'Any',
-      //   airlinePreference: 'Any',
-      //   ziyaratGuideAvailability: false,
-      //   departureLocation: 'Any',
-      //   duration: 'Any',
-      //   foodPreference: 'Any',
-      //   distanceFromHaram: 'Any',
-      // });
+      const preferences = await getAiPreferences(currentInput);
 
-      // if (result.success && result.data && result.data.length > 0) {
-      //   const newPackagesMessage: Message = { role: 'assistant-packages', content: result.data };
-      //   setMessages(prev => [...prev, newPackagesMessage]);
-      // } else {
-      //   const errorMessage: Message = { role: 'assistant', content: result.error || "I couldn't find any packages matching your request. Could you try being more specific?" };
-      //   setMessages(prev => [...prev, errorMessage]);
-      //   toast({
-      //     variant: 'destructive',
-      //     title: 'Search Failed',
-      //     description: result.error || 'Please try again.',
-      //   });
-      // }
+      const result = await getRecommendedPackages(currentInput, preferences || {});
+
+      if (result.success && result.data && result.data.length > 0) {
+        const newPackagesMessage: Message = { role: 'assistant-packages', content: result.data };
+        setMessages(prev => [...prev, newPackagesMessage]);
+      } else {
+        const errorMessage: Message = { role: 'assistant', content: result.error || "I couldn't find any packages matching your request. Could you try being more specific?" };
+        setMessages(prev => [...prev, errorMessage]);
+        toast({
+          variant: 'destructive',
+          title: 'Search Failed',
+          description: result.error || 'Please try again.',
+        });
+      }
       
       setIsLoading(false);
     }
@@ -72,7 +66,11 @@ export default function ChatPage() {
 
   return (
     <div className="flex h-screen flex-col bg-muted/20">
-      <SiteHeader />
+      <Header />
+      <div className="bg-yellow-100 border-b border-yellow-400 text-yellow-800 p-2 text-center text-sm flex items-center justify-center gap-2">
+        <AlertTriangle className="h-4 w-4" />
+        <span>This AI chat is under construction. Recommendations may not be perfect.</span>
+      </div>
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
         <div className="mx-auto max-w-2xl space-y-6">
           {messages.map((message, index) => (

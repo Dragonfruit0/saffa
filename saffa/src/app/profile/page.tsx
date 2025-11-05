@@ -10,6 +10,7 @@ import { Loader2 } from 'lucide-react';
 import { UserProfile } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
+import { WishlistSection } from '@/components/wishlist-section';
 
 export default function ProfilePage() {
   const [user, setUser] = useState<UserProfile | null>(null);
@@ -23,7 +24,7 @@ export default function ProfilePage() {
           const userDocRef = doc(db, 'users', currentUser.uid);
           const userDoc = await getDoc(userDocRef);
           if (userDoc.exists()) {
-            setUser(userDoc.data() as UserProfile);
+            setUser({ uid: currentUser.uid, ...userDoc.data() } as UserProfile);
           } else {
             setUser(null);
           }
@@ -70,7 +71,7 @@ export default function ProfilePage() {
 
   return (
     <div className="container mx-auto py-10">
-      <Card className="max-w-2xl mx-auto">
+      <Card className="max-w-4xl mx-auto">
         <CardHeader>
           <CardTitle className="text-center text-2xl">User Profile</CardTitle>
         </CardHeader>
@@ -96,6 +97,10 @@ export default function ProfilePage() {
                 <p className="text-sm text-muted-foreground">Date of Birth</p>
                 <p>{user.dob}</p>
               </div>
+               <div>
+                <p className="text-sm text-muted-foreground">Phone Number</p>
+                <p>{user.phoneNumber || 'Not provided'}</p>
+              </div>
             </div>
           </div>
           {user.address && (
@@ -109,9 +114,7 @@ export default function ProfilePage() {
             </div>
           )}
           <div className="mt-6">
-            <h3 className="text-lg font-semibold">Wishlist</h3>
-            {/* Placeholder for wishlist */}
-            <p className="text-muted-foreground mt-2">Your wishlist is empty.</p>
+            <WishlistSection user={user} />
           </div>
           <div className="mt-6">
             <h3 className="text-lg font-semibold">Previous Trips</h3>

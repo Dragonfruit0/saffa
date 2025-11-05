@@ -10,10 +10,15 @@ import { MainNav } from '@/components/layout/main-nav';
 import { MobileNav } from '@/components/layout/mobile-nav';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
+import { ComparisonDialog } from '@/components/comparison-dialog';
+import { useComparison } from '@/hooks/use-comparison';
+import { Switch } from '@/components/ui/switch';
 
-export function SiteHeader() {
+export function Header() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const { toast } = useToast();
+    const { packages, isCompareMode, toggleCompareMode } = useComparison();
+    const [isDialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -40,6 +45,15 @@ export function SiteHeader() {
                 <MobileNav />
                 <div className="flex flex-1 items-center justify-end space-x-4">
                     <nav className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2">
+                            <Switch id="compare-mode" checked={isCompareMode} onCheckedChange={toggleCompareMode} />
+                            <label htmlFor="compare-mode">Compare</label>
+                        </div>
+                        {isCompareMode && (
+                            <Button onClick={() => setDialogOpen(true)} disabled={packages.length < 2}>
+                                Compare ({packages.length})
+                            </Button>
+                        )}
                         {isAuthenticated ? (
                             <>
                                 <Button asChild variant="ghost">
@@ -49,12 +63,13 @@ export function SiteHeader() {
                             </>
                         ) : (
                             <Button asChild>
-                                <Link href="/login">Login</Link>
+                                <Link href="/signup">Login</Link>
                             </Button>
                         )}
                     </nav>
                 </div>
             </div>
+            <ComparisonDialog open={isDialogOpen} onOpenChange={setDialogOpen} packages={packages} />
         </header>
     );
 }

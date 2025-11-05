@@ -32,6 +32,10 @@ export function Testimonials() {
     fetchTestimonials();
   }, []);
 
+  if (testimonials.length === 0) {
+    return null;
+  }
+
   return (
     <section className="py-16 lg:py-24 bg-muted/40">
       <div className="container">
@@ -59,7 +63,7 @@ export function Testimonials() {
                             <Star key={i} className="h-5 w-5 text-accent fill-accent" />
                         ))}
                       </div>
-                      <p className="text-muted-foreground italic">"{testimonial.quote}"</p>
+                      <p className="text-muted-foreground italic">\"{testimonial.quote}\"</p>
                       <div className="flex items-center gap-4 pt-4">
                         <Avatar>
                           <AvatarImage src={testimonial.avatarUrl} alt={testimonial.name} data-ai-hint={testimonial.avatarHint}/>

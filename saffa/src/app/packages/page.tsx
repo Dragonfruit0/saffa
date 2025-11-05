@@ -24,12 +24,13 @@ export default function PackagesPage() {
     distanceFromHaram: '',
     distanceFromMasjidENabawi: '',
     food: '',
-    airline: '',
+    airlines: '',
     category: '',
     priceRange: [0, 500000],
   });
   const [comparisonPackages, setComparisonPackages] = useState<Package[]>([]);
   const [isComparisonDialogOpen, setIsComparisonDialogOpen] = useState(false);
+  const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -54,10 +55,10 @@ export default function PackagesPage() {
         packages = packages.filter(p => p.distanceFromMasjidENabawi.toLowerCase().includes(filters.distanceFromMasjidENabawi.toLowerCase()));
     }
     if (filters.food) {
-        packages = packages.filter(p => p.food.toLowerCase().includes(filters.food.toLowerCase()));
+        packages = packages.filter(p => p.food?.toLowerCase().includes(filters.food.toLowerCase()));
     }
-    if (filters.airline) {
-      packages = packages.filter(p => p.airline.toLowerCase().includes(filters.airline.toLowerCase()));
+    if (filters.airlines) {
+      packages = packages.filter(p => p.airlines?.toLowerCase().includes(filters.airlines.toLowerCase()));
     }
     if (filters.category) {
       packages = packages.filter(p => p.category === filters.category);
@@ -71,12 +72,18 @@ export default function PackagesPage() {
     setFilters(prev => ({ ...prev, [name]: value }));
   };
 
-  const toggleCompare = (pkg: Package) => {
-    setComparisonPackages(prev =>
-      prev.find(p => p.id === pkg.id)
-        ? prev.filter(p => p.id !== pkg.id)
-        : [...prev, pkg]
-    );
+  const toggleCompare = (pkg: Package, isChecked: boolean) => {
+    setComparisonPackages(prev => {
+      if (isChecked) {
+        return [...prev, pkg];
+      } else {
+        return prev.filter(p => p.id !== pkg.id);
+      }
+    });
+  };
+
+  const handleMoreInfo = (pkg: Package) => {
+    setSelectedPackage(pkg);
   };
 
   const packageCategories: PackageCategory[] = ['Economy', 'Deluxe', 'Luxury', 'Family', 'Group', 'Private'];
@@ -87,7 +94,7 @@ export default function PackagesPage() {
       <Input placeholder="Distance from Haram" value={filters.distanceFromHaram} onChange={e => handleFilterChange('distanceFromHaram', e.target.value)} />
       <Input placeholder="Distance from Masjid e Nabawi" value={filters.distanceFromMasjidENabawi} onChange={e => handleFilterChange('distanceFromMasjidENabawi', e.target.value)} />
       <Input placeholder="Food" value={filters.food} onChange={e => handleFilterChange('food', e.target.value)} />
-      <Input placeholder="Airline" value={filters.airline} onChange={e => handleFilterChange('airline', e.target.value)} />
+      <Input placeholder="Airlines" value={filters.airlines} onChange={e => handleFilterChange('airlines', e.target.value)} />
       <Select onValueChange={value => handleFilterChange('category', value === 'all' ? '' : value)} value={filters.category}>
         <SelectTrigger><SelectValue placeholder="Category" /></SelectTrigger>
         <SelectContent>
@@ -150,32 +157,13 @@ export default function PackagesPage() {
 
         <div className="md:col-span-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPackages.map(pkg => (
-            <Dialog key={pkg.id}>
-              <DialogTrigger asChild>
-                <div className="cursor-pointer">
-                    <PackageCard 
-                        package={pkg} 
-                        onCompareToggle={() => toggleCompare(pkg)} 
-                        isSelected={comparisonPackages.some(p => p.id === pkg.id)}
-                    />
-                </div>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>{pkg.name}</DialogTitle>
-                </DialogHeader>
-                <div className="grid gap-4 py-4 text-sm">
-                  <div className="flex justify-between"><span><strong>Price:</strong></span> <span>INR {pkg.price.toLocaleString('en-IN')}</span></div>
-                  <div className="flex justify-between"><span><strong>Duration:</strong></span> <span>{pkg.duration}</span></div>
-                  <div className="flex justify-between"><span><strong>Airline:</strong></span> <span>{pkg.airline}</span></div>
-                  <div className="flex justify-between"><span><strong>Departure:</strong></span> <span>{pkg.departureLocation}</span></div>
-                  <div className="flex justify-between"><span><strong>Food:</strong></span> <span>{pkg.food}</span></div>
-                  <div className="flex justify-between"><span><strong>From Haram:</strong></span> <span>{pkg.distanceFromHaram}</span></div>
-                  <div className="flex justify-between"><span><strong>From Masjid e Nabawi:</strong></span> <span>{pkg.distanceFromMasjidENabawi}</span></div>
-                  <div className="flex justify-between"><span><strong>Category:</strong></span> <span>{pkg.category}</span></div>
-                </div>
-              </DialogContent>
-            </Dialog>
+            <PackageCard 
+                key={pkg.id}
+                package={pkg} 
+                onCompareToggle={toggleCompare} 
+                onMoreInfo={handleMoreInfo}
+                isSelected={comparisonPackages.some(p => p.id === pkg.id)}
+            />
           ))}
         </div>
       </div>
@@ -188,9 +176,29 @@ export default function PackagesPage() {
         </div>
       )}
 
+        <Dialog open={!!selectedPackage} onOpenChange={() => setSelectedPackage(null)}>
+            {selectedPackage && (
+                <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                    <DialogTitle>{selectedPackage.name}</DialogTitle>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4 text-sm">
+                    <div className="flex justify-between"><span><strong>Price:</strong></span> <span>INR {selectedPackage.price.toLocaleString('en-IN')}</span></div>
+                    <div className="flex justify-between"><span><strong>Duration:</strong></span> <span>{selectedPackage.duration}</span></div>
+                    <div className="flex justify-between"><span><strong>Airlines:</strong></span> <span>{selectedPackage.airlines}</span></div>
+                    <div className="flex justify-between"><span><strong>Departure:</strong></span> <span>{selectedPackage.departureLocation}</span></div>
+                    <div className="flex justify-between"><span><strong>Food:</strong></span> <span>{selectedPackage.food}</span></div>
+                    <div className="flex justify-between"><span><strong>From Haram:</strong></span> <span>{selectedPackage.distanceFromHaram}</span></div>
+                    <div className="flex justify-between"><span><strong>From Masjid e Nabawi:</strong></span> <span>{selectedPackage.distanceFromMasjidENabawi}</span></div>
+                    <div className="flex justify-between"><span><strong>Category:</strong></span> <span>{selectedPackage.category}</span></div>
+                    </div>
+                </DialogContent>
+            )}
+        </Dialog>
+
       <ComparisonDialog
         packages={comparisonPackages}
-        isOpen={isComparisonDialogOpen}
+        open={isComparisonDialogOpen}
         onOpenChange={setIsComparisonDialogOpen}
       />
     </div>

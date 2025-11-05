@@ -1,77 +1,95 @@
 'use client';
 
-import Image from "next/image";
-import type { Package } from "@/lib/types";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Plane, Clock, Utensils, MapPin } from "lucide-react";
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import type { Package } from '@/lib/types';
+import Image from 'next/image';
+import { trackBookNowClick } from '@/lib/analytics';
+import { useAuth } from '@/hooks/use-auth';
 
 interface PackageCardProps {
   package: Package;
-  onCompareToggle: (pkg: Package) => void;
+  onCompareToggle: (pkg: Package, isSelected: boolean) => void;
   isSelected: boolean;
+  isCompareMode: boolean;
+  onMoreInfo: (pkg: Package) => void;
 }
 
-export function PackageCard({ package: pkg, onCompareToggle, isSelected }: PackageCardProps) {
-  const handleCheckedChange = () => {
-    onCompareToggle(pkg);
+export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompareMode, onMoreInfo }: PackageCardProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
+  const { user } = useAuth();
+
+  const handleBookNow = async () => {
+    if (user) {
+        await trackBookNowClick(pkg, user);
+    }
+    const message = `I came from Safamarwah.in and I'm interested in the ${pkg.name} package.\n\nHere are the details:\n- Price: INR ${pkg.price.toLocaleString('en-IN')}\n- Duration: ${pkg.duration}\n- Distance from Haram: ${pkg.distanceFromHaram}\n- Distance from Masjid e Nabawi: ${pkg.distanceFromMasjidENabawi}`;
+    const whatsappUrl = `https://api.whatsapp.com/send/?phone=919908829096&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const handleMoreInfo = () => {
+    if (onMoreInfo) {
+      onMoreInfo(pkg);
+    }
+    setIsModalOpen(true);
   };
 
   return (
-    <Card className="flex flex-col overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-      <div className="relative h-48 w-full">
-        <Image 
-          src={pkg.imageUrl} 
-          alt={pkg.name} 
-          data-ai-hint={pkg.imageHint}
-          fill 
-          className="object-cover" 
-        />
-         <Badge className="absolute top-2 right-2">{pkg.category}</Badge>
-      </div>
-      <CardHeader>
-        <CardTitle className="text-lg font-headline tracking-tight">{pkg.name}</CardTitle>
-        <div className="flex items-baseline gap-2">
-            <p className="text-2xl font-bold text-primary">INR {pkg.price.toLocaleString('en-IN')}</p>
-            <span className="text-sm text-muted-foreground">/person</span>
-        </div>
-      </CardHeader>
-      <CardContent className="flex-grow space-y-3 text-sm">
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Clock className="h-4 w-4 text-primary/80" />
-          <span>{pkg.duration}</span>
-        </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Plane className="h-4 w-4 text-primary/80" />
-          <span>{pkg.airline}</span>
-        </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <MapPin className="h-4 w-4 text-primary/80" />
-          <span>{pkg.distanceFromHaram} from Haram</span>
-        </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
-            <MapPin className="h-4 w-4 text-primary/80" />
-            <span>{pkg.distanceFromMasjidENabawi} from Masjid e Nabawi</span>
-        </div>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <Utensils className="h-4 w-4 text-primary/80" />
-          <span>Food: {pkg.food}</span>
-        </div>
-      </CardContent>
-      <CardFooter className="bg-muted/40 p-4 flex justify-between items-center">
-        <div className="flex items-center space-x-2 ml-auto">
-          <Checkbox 
-            id={`compare-${pkg.id}`} 
-            checked={isSelected} 
-            onCheckedChange={handleCheckedChange}
+    <div className="border rounded-lg shadow-lg overflow-hidden relative">
+      {isCompareMode && (
+        <div className="absolute top-2 left-2 z-10">
+          <Checkbox
+            checked={isSelected}
+            onCheckedChange={(checked) => onCompareToggle(pkg, !!checked)}
+            className="bg-white border-gray-400"
           />
-          <Label htmlFor={`compare-${pkg.id}`} className="text-sm font-medium cursor-pointer">
-            Compare
-          </Label>
         </div>
-      </CardFooter>
-    </Card>
+      )}
+      <Image src={pkg.imageUrls[0]} alt={pkg.name} width={400} height={250} className="object-cover w-full h-48" />
+      <div className="p-4">
+        <h3 className="font-bold text-lg">{pkg.name}</h3>
+        <p className="text-sm text-muted-foreground">{pkg.duration}</p>
+        <p className="text-lg font-semibold mt-2">₹{pkg.price.toLocaleString()}</p>
+        <div className="mt-4 flex justify-between space-x-2">
+          <Button variant="outline" onClick={handleMoreInfo}>More Info</Button>
+          <Button onClick={handleBookNow}>Book Now</Button>
+        </div>
+      </div>
+
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>{pkg.name}</DialogTitle>
+            <DialogDescription>{pkg.description}</DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+            <div>
+              <Image src={pkg.imageUrls[0]} alt={pkg.name} width={600} height={400} className="object-cover rounded-lg w-full" />
+            </div>
+            <div>
+              <h4 className="font-semibold text-lg mb-2">Package Details</h4>
+              <ul className="space-y-2 text-sm text-muted-foreground">
+                <li><strong>Duration:</strong> {pkg.duration}</li>
+                <li><strong>Haram Distance:</strong> {pkg.distanceFromHaram}</li>
+                <li><strong>Masjid e Nabawi Distance:</strong> {pkg.distanceFromMasjidENabawi}</li>
+                <li><strong>Food:</strong> {pkg.food}</li>
+                <li><strong>Airlines:</strong> {pkg.airlines}</li>
+                <li><strong>Departure:</strong> {pkg.departureLocation}</li>
+              </ul>
+              <p className="text-2xl font-bold mt-4">₹{pkg.price.toLocaleString()}</p>
+            </div>
+          </div>
+          <DialogFooter className="mt-6">
+            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Close</Button>
+            <Button onClick={handleBookNow}>Book Now</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }

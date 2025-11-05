@@ -7,9 +7,11 @@ interface FeaturedPackagesProps {
   packages: Package[];
   onCompareToggle: (pkg: Package, isSelected: boolean) => void;
   isPackageSelected: (pkgId: string) => boolean;
+  isCompareMode: boolean;
+  onMoreInfo: (pkg: Package) => void;
 }
 
-export function FeaturedPackages({ packages, onCompareToggle, isPackageSelected }: FeaturedPackagesProps) {
+export function FeaturedPackages({ packages, onCompareToggle, isPackageSelected, isCompareMode, onMoreInfo }: FeaturedPackagesProps) {
   return (
     <section className="py-16 lg:py-24 bg-background">
       <div className="container">
@@ -26,6 +28,8 @@ export function FeaturedPackages({ packages, onCompareToggle, isPackageSelected 
               package={pkg}
               onCompareToggle={onCompareToggle}
               isSelected={isPackageSelected(pkg.id)}
+              isCompareMode={isCompareMode}
+              onMoreInfo={onMoreInfo}
             />
           ))}
         </div>

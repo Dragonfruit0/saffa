@@ -4,9 +4,9 @@ import { PlaceHolderImages } from './placeholder-images';
 const findImage = (id: string) => {
   const img = PlaceHolderImages.find(p => p.id === id);
   if (!img) {
-    return { imageUrl: '', imageHint: '' };
+    return { imageUrls: [] };
   }
-  return { imageUrl: img.imageUrl, imageHint: img.imageHint };
+  return { imageUrls: [img.imageUrl] };
 }
 
 export const featuredPackages: Package[] = [];

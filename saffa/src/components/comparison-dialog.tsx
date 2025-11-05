@@ -5,12 +5,12 @@ import type { Package } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 
 interface ComparisonDialogProps {
-  isOpen: boolean;
+  open: boolean;
   onOpenChange: (open: boolean) => void;
   packages: Package[];
 }
 
-export function ComparisonDialog({ isOpen, onOpenChange, packages }: ComparisonDialogProps) {
+export function ComparisonDialog({ open, onOpenChange, packages }: ComparisonDialogProps) {
   if (packages.length < 1) return null;
 
   const features = [
@@ -25,7 +25,7 @@ export function ComparisonDialog({ isOpen, onOpenChange, packages }: ComparisonD
   ];
 
   return (
-    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-6xl">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold text-center">Compare Packages</DialogTitle>

@@ -49,7 +49,7 @@ export function Footer() {
 
         </div>
         <div className="mt-12 border-t pt-6 text-center text-sm text-muted-foreground">
-          <p>&copy; {new Date().getFullYear()} Umrah Compare. All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} SafaMarwah All rights reserved.</p>
         </div>
       </div>
     </footer>

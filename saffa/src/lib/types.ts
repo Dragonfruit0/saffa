@@ -1,4 +1,3 @@
-
 export type PackageCategory = 'Economy' | 'Deluxe' | 'Luxury' | 'Family' | 'Group' | 'Private';
 
 export type Package = {
@@ -6,14 +5,15 @@ export type Package = {
   name: string;
   description: string;
   price: number;
-  imageUrl: string;
-  imageHint: string;
+  imageUrls: string[];
   duration: string;
-  location: string;
   category: PackageCategory;
   distanceFromHaram: string;
   distanceFromMasjidENabawi: string;
   departureLocation: string;
+  agentName?: string;
+  food?: string;
+  airlines?: string;
 };
 
 export type Testimonial = {
@@ -30,6 +30,7 @@ export type UserProfile = {
   name?: string;
   email?: string;
   photoURL?: string;
+  phoneNumber?: string;
   gender?: 'Male' | 'Female' | 'Other';
   dob?: string;
   address?: {
@@ -41,4 +42,13 @@ export type UserProfile = {
   };
   wishlist?: string[];
   previousTrips?: string[];
+  role?: 'admin';
 };
+
+export type Blog = {
+    id: string;
+    title: string;
+    content: string;
+    author: string;
+    createdAt: string | null;
+  };
