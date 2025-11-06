@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,19 +12,19 @@
     --card-foreground: 224 71% 4%;
     --popover: 120 60% 100%;
     --popover-foreground: 224 71% 4%;
-    --primary: 147 50% 47%;
-    --primary-foreground: 147 50% 97%;
-    --secondary: 147 25% 90%;
+    --primary: 163 56% 22%;
+    --primary-foreground: 163 56% 92%;
+    --secondary: 163 40% 90%;
     --secondary-foreground: 224 71% 20%;
-    --muted: 147 25% 94%;
+    --muted: 163 40% 94%;
     --muted-foreground: 224 20% 45%;
-    --accent: 142 76% 36%;
-    --accent-foreground: 142 76% 96%;
+    --accent: 163 56% 32%;
+    --accent-foreground: 163 56% 92%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 147 25% 88%;
-    --input: 147 25% 88%;
-    --ring: 147 50% 47%;
+    --border: 163 40% 88%;
+    --input: 163 40% 88%;
+    --ring: 163 56% 22%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -38,19 +40,19 @@
     --card-foreground: 120 10% 95%;
     --popover: 220 20% 10%;
     --popover-foreground: 120 10% 95%;
-    --primary: 147 50% 47%;
-    --primary-foreground: 147 50% 97%;
+    --primary: 163 56% 22%;
+    --primary-foreground: 163 56% 92%;
     --secondary: 220 20% 20%;
     --secondary-foreground: 120 10% 95%;
     --muted: 220 20% 17%;
     --muted-foreground: 120 10% 65%;
-    --accent: 142 76% 36%;
-    --accent-foreground: 142 76% 96%;
+    --accent: 163 56% 32%;
+    --accent-foreground: 163 56% 92%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
     --border: 220 20% 25%;
     --input: 220 20% 25%;
-    --ring: 147 50% 57%;
+    --ring: 163 56% 32%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
     --chart-3: 30 80% 55%;
@@ -66,4 +68,33 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Custom Fonts */
+
+.font-display {
+  font-family: 'Playfair Display', serif;
+}
+
+.font-arabic {
+  font-family: 'Amiri', serif;
+}
+
+/* Animations */
+@keyframes fadeInOut {
+  0%, 100% { opacity: 0; }
+  50% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.fade-in-out {
+  animation: fadeInOut 2s ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fadeIn 1.5s ease-in-out;
 }

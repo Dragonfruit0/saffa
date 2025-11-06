@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -12,7 +11,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Home, Filter } from 'lucide-react';
 
@@ -30,7 +28,6 @@ export default function PackagesPage() {
   });
   const [comparisonPackages, setComparisonPackages] = useState<Package[]>([]);
   const [isComparisonDialogOpen, setIsComparisonDialogOpen] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -80,10 +77,6 @@ export default function PackagesPage() {
         return prev.filter(p => p.id !== pkg.id);
       }
     });
-  };
-
-  const handleMoreInfo = (pkg: Package) => {
-    setSelectedPackage(pkg);
   };
 
   const packageCategories: PackageCategory[] = ['Economy', 'Deluxe', 'Luxury', 'Family', 'Group', 'Private'];
@@ -161,7 +154,7 @@ export default function PackagesPage() {
                 key={pkg.id}
                 package={pkg} 
                 onCompareToggle={toggleCompare} 
-                onMoreInfo={handleMoreInfo}
+                onMoreInfo={() => {}}
                 isSelected={comparisonPackages.some(p => p.id === pkg.id)}
             />
           ))}
@@ -175,26 +168,6 @@ export default function PackagesPage() {
           </Button>
         </div>
       )}
-
-        <Dialog open={!!selectedPackage} onOpenChange={() => setSelectedPackage(null)}>
-            {selectedPackage && (
-                <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                    <DialogTitle>{selectedPackage.name}</DialogTitle>
-                    </DialogHeader>
-                    <div className="grid gap-4 py-4 text-sm">
-                    <div className="flex justify-between"><span><strong>Price:</strong></span> <span>INR {selectedPackage.price.toLocaleString('en-IN')}</span></div>
-                    <div className="flex justify-between"><span><strong>Duration:</strong></span> <span>{selectedPackage.duration}</span></div>
-                    <div className="flex justify-between"><span><strong>Airlines:</strong></span> <span>{selectedPackage.airlines}</span></div>
-                    <div className="flex justify-between"><span><strong>Departure:</strong></span> <span>{selectedPackage.departureLocation}</span></div>
-                    <div className="flex justify-between"><span><strong>Food:</strong></span> <span>{selectedPackage.food}</span></div>
-                    <div className="flex justify-between"><span><strong>From Haram:</strong></span> <span>{selectedPackage.distanceFromHaram}</span></div>
-                    <div className="flex justify-between"><span><strong>From Masjid e Nabawi:</strong></span> <span>{selectedPackage.distanceFromMasjidENabawi}</span></div>
-                    <div className="flex justify-between"><span><strong>Category:</strong></span> <span>{selectedPackage.category}</span></div>
-                    </div>
-                </DialogContent>
-            )}
-        </Dialog>
 
       <ComparisonDialog
         packages={comparisonPackages}

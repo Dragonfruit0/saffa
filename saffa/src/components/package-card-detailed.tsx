@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import type { Package } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogClose } from '@/components/ui/dialog';
@@ -11,6 +12,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import Image from 'next/image';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Heart } from 'lucide-react';
+import { trackBookNowClick } from '@/lib/analytics';
 
 type PackageCardProps = {
   package: Package;
@@ -18,13 +20,12 @@ type PackageCardProps = {
   isSelected?: boolean;
   isCompareMode?: boolean;
   onRemove?: (pkgId: string) => void;
-  onMoreInfo?: (pkg: Package) => void;
-  onBookNow?: (pkg: Package) => void;
 };
 
-export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompareMode, onRemove, onMoreInfo, onBookNow }: PackageCardProps) {
+export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompareMode, onRemove }: PackageCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
+  const router = useRouter();
 
   const handleAddToWishlist = async () => {
     if (!user) {
@@ -51,16 +52,18 @@ export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompa
     }
   };
 
-  const handleBookNowClick = () => {
-    if (onBookNow) {
-        onBookNow(pkg)
+  const handleBookNowClick = async () => {
+    if (!user) {
+      router.push('/signup');
+      return;
     }
+    await trackBookNowClick(pkg, user);
+    const message = `I came from Safamarwah.in and I'm interested in the ${pkg.name} package.\n\nHere are the details:\n- Price: INR ${pkg.price.toLocaleString('en-IN')}\n- Duration: ${pkg.duration}\n- Distance from Haram: ${pkg.distanceFromHaram}\n- Distance from Masjid e Nabawi: ${pkg.distanceFromMasjidENabawi}`;
+    const whatsappUrl = `https://api.whatsapp.com/send/?phone=919908829096&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`;
+    window.open(whatsappUrl, '_blank');
   };
   
   const handleMoreInfo = () => {
-    if (onMoreInfo) {
-      onMoreInfo(pkg);
-    }
     setIsModalOpen(true);
   }
 

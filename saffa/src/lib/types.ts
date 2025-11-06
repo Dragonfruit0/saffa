@@ -14,6 +14,10 @@ export type Package = {
   agentName?: string;
   food?: string;
   airlines?: string;
+  introduction?: string;
+  experience?: string;
+  notice?: string;
+  transparencyAndLegal?: string;
 };
 
 export type Testimonial = {
@@ -52,3 +56,11 @@ export type Blog = {
     author: string;
     createdAt: string | null;
   };
+
+export type AISearchPreference = {
+  duration_days?: number;
+  budget_inr?: number;
+  travel_month?: string;
+  accommodation_rating?: string;
+  transportation_preference?: string;
+};

@@ -6,7 +6,7 @@ import { db } from '@/lib/firebase';
 import type { Package } from '@/lib/types';
 import { Header } from '@/components/layout/header';
 import { Footer } from '@/components/layout/footer';
-import { Hero } from '@/components/sections/hero';
+import { HeroAnimated } from '@/components/sections/hero-animated';
 import { PackageList } from '@/components/package-list-detailed';
 import { About } from '@/components/sections/about';
 import { Testimonials } from '@/components/sections/testimonials';
@@ -84,7 +84,7 @@ export default function HomePage() {
     <div className="flex min-h-screen flex-col bg-background">
       <Header />
       <main className="flex-1">
-        <Hero />
+        <HeroAnimated />
         <PackageList 
           packages={packages} 
           title="Featured Umrah Packages" 

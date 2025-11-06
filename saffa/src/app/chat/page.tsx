@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { getRecommendedPackages, getAiPreferences } from '@/app/actions';
 import type { Package } from '@/lib/types';
 
 import { Header } from '@/components/layout/header';
@@ -9,19 +8,23 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Send, Sparkles, Loader2, AlertTriangle } from 'lucide-react';
-import { ChatPackageCard } from '@/components/chat-package-card';
 import { useToast } from '@/hooks/use-toast';
 
 type Message = {
-  role: 'user' | 'assistant' | 'assistant-packages';
-  content: string | Package[];
+  role: 'user' | 'assistant';
+  content: string;
 };
+
+const LYRA_API_KEY = 'sk-default-SHus2UdNE4271pzD15Rtfnk23l5u8KZm';
+const AGENT_ID = '68dd6ed32660a8875bd6f11e';
+const USER_ID = 'tashifanooreen@gmail.com';
+const SESSION_ID = '68dd6ed32660a8875bd6f11e-7uuot8xwwaa';
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Assalamu Alaikum! Tell me your Umrah preferences and I’ll find the perfect package for you.',
+      content: 'Assalamu Alaikum! I am the SafaMarwah AI Assistant. How can I help you plan your Umrah journey today?',
     },
   ]);
   const [input, setInput] = useState('');
@@ -43,67 +46,73 @@ export default function ChatPage() {
       setInput('');
       setIsLoading(true);
 
-      const preferences = await getAiPreferences(currentInput);
+      try {
+        const response = await fetch('https://agent-prod.studio.lyzr.ai/v3/inference/chat/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': LYRA_API_KEY,
+          },
+          body: JSON.stringify({
+            user_id: USER_ID,
+            agent_id: AGENT_ID,
+            session_id: SESSION_ID,
+            message: currentInput,
+          }),
+        });
 
-      const result = await getRecommendedPackages(currentInput, preferences || {});
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
 
-      if (result.success && result.data && result.data.length > 0) {
-        const newPackagesMessage: Message = { role: 'assistant-packages', content: result.data };
-        setMessages(prev => [...prev, newPackagesMessage]);
-      } else {
-        const errorMessage: Message = { role: 'assistant', content: result.error || "I couldn't find any packages matching your request. Could you try being more specific?" };
+        const data = await response.json();
+        const aiResponse = data.response;
+
+        const newAiMessage: Message = { role: 'assistant', content: aiResponse };
+        setMessages(prev => [...prev, newAiMessage]);
+
+      } catch (error) {
+        console.error('Error fetching from Lyzr API:', error);
+        const errorMessage: Message = { role: 'assistant', content: "Sorry, I'm having trouble connecting to my knowledge base. Please try again later." };
         setMessages(prev => [...prev, errorMessage]);
         toast({
           variant: 'destructive',
-          title: 'Search Failed',
-          description: result.error || 'Please try again.',
+          title: 'API Error',
+          description: 'Could not fetch a response. Please check the console for details.',
         });
+      } finally {
+        setIsLoading(false);
       }
-      
-      setIsLoading(false);
     }
   };
 
   return (
     <div className="flex h-screen flex-col bg-muted/20">
       <Header />
-      <div className="bg-yellow-100 border-b border-yellow-400 text-yellow-800 p-2 text-center text-sm flex items-center justify-center gap-2">
-        <AlertTriangle className="h-4 w-4" />
-        <span>This AI chat is under construction. Recommendations may not be perfect.</span>
-      </div>
       <div className="flex-1 overflow-y-auto p-4 md:p-6">
         <div className="mx-auto max-w-2xl space-y-6">
           {messages.map((message, index) => (
             <div key={index} className={`flex items-start gap-4 ${message.role === 'user' ? 'justify-end' : ''}`}>
               {message.role !== 'user' && (
                 <Avatar className="h-8 w-8 border">
-                   <AvatarImage src="https://picsum.photos/seed/bot/100/100" alt="AI Agent" data-ai-hint="mosque logo" />
+                   <AvatarImage src="https://lyzr.ai/images/lyzr-logo.svg" alt="AI Agent" />
                   <AvatarFallback>AI</AvatarFallback>
                 </Avatar>
               )}
-              <div className={`max-w-[85%] rounded-lg ${message.role === 'user' ? 'bg-primary text-primary-foreground p-3' : ''} ${message.role === 'assistant' ? 'bg-background shadow-sm p-3' : ''}`}>
-                {typeof message.content === 'string' ? (
-                  <p className="text-sm">{message.content}</p>
-                ) : (
-                  <div className="space-y-4">
-                    <p className="text-sm text-foreground font-medium px-3 pt-3">Here are the top 3 packages I found for you:</p>
-                    {message.content.map(pkg => (
-                      <ChatPackageCard key={pkg.id} package={pkg} />
-                    ))}
-                  </div>
-                )}
+              <div className={`max-w-[85%] rounded-lg p-3 ${message.role === 'user' ? 'bg-primary text-primary-foreground' : 'bg-background shadow-sm'}`}>
+                  <p className="text-sm whitespace-pre-wrap">{message.content}</p>
               </div>
             </div>
           ))}
            {isLoading && (
             <div className="flex items-start gap-4">
               <Avatar className="h-8 w-8 border">
-                <AvatarImage src="https://picsum.photos/seed/bot/100/100" alt="AI Agent" data-ai-hint="mosque logo" />
-                <AvatarFallback>AI</AvatarFallback>
+                <AvatarImage src="https://lyzr.ai/images/lyzr-logo.svg" alt="AI Agent" />
+                <AvatarFallback>U</AvatarFallback>
               </Avatar>
               <div className="max-w-[85%] rounded-lg bg-background p-3 shadow-sm flex items-center gap-2">
                 <Loader2 className="h-4 w-4 animate-spin text-primary" />
-                <p className="text-sm text-muted-foreground">Finding the best packages for you...</p>
+                <p className="text-sm text-muted-foreground">Umar is thinking...</p>
               </div>
             </div>
           )}
@@ -117,7 +126,7 @@ export default function ChatPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="e.g., 'I am looking for a 10 day package under INR 1,50,000...'"
+              placeholder="Ask me anything about your Umrah journey..."
               className="pr-12"
               disabled={isLoading}
             />
@@ -132,7 +141,7 @@ export default function ChatPage() {
             </Button>
           </div>
            <p className="mt-2 text-center text-xs text-muted-foreground">
-              Powered by AI <Sparkles className="inline-block h-3 w-3" />
+              Powered by <a href="https://lyzr.ai" target="_blank" rel="noopener noreferrer" className="font-medium underline">Lyzr.ai</a> <Sparkles className="inline-block h-3 w-3" />
             </p>
         </div>
       </div>
