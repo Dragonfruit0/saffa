@@ -13,6 +13,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Home, Filter } from 'lucide-react';
+import { trackPackageClick } from '@/lib/analytics';
+import { useAuth } from '@/hooks/use-auth';
 
 export default function PackagesPage() {
   const [allPackages, setAllPackages] = useState<Package[]>([]);
@@ -28,6 +30,7 @@ export default function PackagesPage() {
   });
   const [comparisonPackages, setComparisonPackages] = useState<Package[]>([]);
   const [isComparisonDialogOpen, setIsComparisonDialogOpen] = useState(false);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchPackages = async () => {
@@ -68,6 +71,12 @@ export default function PackagesPage() {
   const handleFilterChange = (name: string, value: any) => {
     setFilters(prev => ({ ...prev, [name]: value }));
   };
+  
+  const handleMoreInfo = async (pkg: Package) => {
+    if (user) {
+        await trackPackageClick(pkg, user);
+    }
+  }
 
   const toggleCompare = (pkg: Package, isChecked: boolean) => {
     setComparisonPackages(prev => {
@@ -154,8 +163,9 @@ export default function PackagesPage() {
                 key={pkg.id}
                 package={pkg} 
                 onCompareToggle={toggleCompare} 
-                onMoreInfo={() => {}}
+                onMoreInfo={handleMoreInfo}
                 isSelected={comparisonPackages.some(p => p.id === pkg.id)}
+                isCompareMode
             />
           ))}
         </div>

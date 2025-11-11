@@ -10,9 +10,10 @@ type PackageListProps = {
   isCompareMode?: boolean;
   onRemove?: (pkgId: string) => void; // Added for wishlist removal
   onBookNow?: (pkg: Package) => void;
+  onMoreInfo?: (pkg: Package) => void;
 };
 
-export function PackageList({ packages, title, onCompareToggle, isPackageSelected, isCompareMode, onRemove, onBookNow }: PackageListProps) {
+export function PackageList({ packages, title, onCompareToggle, isPackageSelected, isCompareMode, onRemove, onBookNow, onMoreInfo }: PackageListProps) {
   const listContent = (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {packages.map(pkg => (
@@ -24,6 +25,7 @@ export function PackageList({ packages, title, onCompareToggle, isPackageSelecte
           isCompareMode={isCompareMode}
           onRemove={onRemove} // Pass down the onRemove function
           onBookNow={onBookNow}
+          onMoreInfo={onMoreInfo}
         />
       ))}
     </div>

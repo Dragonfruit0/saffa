@@ -1,10 +1,8 @@
 'use client';
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
 import type { Package } from '@/lib/types';
 import Image from 'next/image';
 import { trackBookNowClick } from '@/lib/analytics';
@@ -15,6 +13,7 @@ interface PackageCardProps {
   onCompareToggle: (pkg: Package, isSelected: boolean) => void;
   isSelected: boolean;
   isCompareMode: boolean;
+  onMoreInfo: (pkg: Package) => void;
 }
 
 const imageUrls = [
@@ -28,8 +27,7 @@ const imageUrls = [
   "https://hajjumrahplanner.com/wp-content/uploads/2017/02/tawaf-ground.jpg"
 ];
 
-export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompareMode }: PackageCardProps) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompareMode, onMoreInfo }: PackageCardProps) {
   const router = useRouter();
   const { user } = useAuth();
   
@@ -38,7 +36,7 @@ export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompa
     return id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0) % imageUrls.length;
   };
   
-  const imageUrl = imageUrls[getIndexFromId(pkg.id)] || imageUrls[0];
+  const imageUrl = pkg.imageUrls?.[0] || imageUrls[getIndexFromId(pkg.id)] || imageUrls[0];
 
   const handleBookNow = async () => {
     if (!user) {
@@ -47,12 +45,13 @@ export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompa
     }
     await trackBookNowClick(pkg, user);
     const message = `I came from Safamarwah.in and I'm interested in the ${pkg.name} package.\n\nHere are the details:\n- Price: INR ${pkg.price.toLocaleString('en-IN')}\n- Duration: ${pkg.duration}\n- Distance from Haram: ${pkg.distanceFromHaram}\n- Distance from Masjid e Nabawi: ${pkg.distanceFromMasjidENabawi}`;
-    const whatsappUrl = `https://api.whatsapp.com/send/?phone=919908829096&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`;
+    const whatsappUrl = `https://api.whatsapp.com/send/?phone=919990237953&text=${encodeURIComponent(message)}&type=phone_number&app_absent=0`;
     window.open(whatsappUrl, '_blank');
   };
 
   const handleMoreInfo = () => {
-    setIsModalOpen(true);
+    onMoreInfo(pkg);
+    router.push(`/more-info?id=${pkg.id}`);
   };
 
   return (
@@ -76,36 +75,6 @@ export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompa
           <Button onClick={handleBookNow}>Book Now</Button>
         </div>
       </div>
-
-      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>{pkg.name}</DialogTitle>
-            <DialogDescription>{pkg.description}</DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-            <div>
-              <Image src={imageUrl} alt={pkg.name} width={600} height={400} className="object-cover rounded-lg w-full" />
-            </div>
-            <div>
-              <h4 className="font-semibold text-lg mb-2">Package Details</h4>
-              <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><strong>Duration:</strong> {pkg.duration}</li>
-                <li><strong>Haram Distance:</strong> {pkg.distanceFromHaram}</li>
-                <li><strong>Masjid e Nabawi Distance:</strong> {pkg.distanceFromMasjidENabawi}</li>
-                <li><strong>Food:</strong> {pkg.food}</li>
-                <li><strong>Airlines:</strong> {pkg.airlines}</li>
-                <li><strong>Departure:</strong> {pkg.departureLocation}</li>
-              </ul>
-              <p className="text-2xl font-bold mt-4">INR{pkg.price.toLocaleString()}</p>
-            </div>
-          </div>
-          <DialogFooter className="mt-6">
-            <Button variant="outline" onClick={() => setIsModalOpen(false)}>Close</Button>
-            <Button onClick={handleBookNow}>Book Now</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 }

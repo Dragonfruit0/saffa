@@ -20,9 +20,11 @@ type PackageCardProps = {
   isSelected?: boolean;
   isCompareMode?: boolean;
   onRemove?: (pkgId: string) => void;
+  onMoreInfo?: (pkg: Package) => void;
+  onBookNow?: (pkg: Package) => void;
 };
 
-export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompareMode, onRemove }: PackageCardProps) {
+export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompareMode, onRemove, onMoreInfo, onBookNow }: PackageCardProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
@@ -53,6 +55,9 @@ export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompa
   };
 
   const handleBookNowClick = async () => {
+    if (onBookNow) {
+        onBookNow(pkg)
+    }
     if (!user) {
       router.push('/signup');
       return;
@@ -64,6 +69,9 @@ export function PackageCard({ package: pkg, onCompareToggle, isSelected, isCompa
   };
   
   const handleMoreInfo = () => {
+    if (onMoreInfo) {
+      onMoreInfo(pkg);
+    }
     setIsModalOpen(true);
   }
 

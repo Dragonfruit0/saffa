@@ -22,7 +22,7 @@ export function AdminView() {
   useEffect(() => {
     const fetchData = async () => {
       const analyticsData = await getAnalytics();
-      setAnalytics(analyticsData);
+      setAnalytics(analyticsData as { logins: number; bookNowClicks: number; });
       const interactionData = await getPackageInteractions();
       setInteractions(interactionData as Interaction[]);
     };

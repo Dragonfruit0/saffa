@@ -16,7 +16,7 @@ export function ComparisonDialog({ open, onOpenChange, packages }: ComparisonDia
   const features = [
     { key: 'price', label: 'Price', render: (pkg: Package) => `INR ${pkg.price.toLocaleString('en-IN')}` },
     { key: 'duration', label: 'Duration', render: (pkg: Package) => pkg.duration },
-    { key: 'airline', label: 'Airline', render: (pkg: Package) => pkg.airline },
+    { key: 'airlines', label: 'Airline', render: (pkg: Package) => pkg.airlines },
     { key: 'distanceFromHaram', label: 'Distance from Haram', render: (pkg: Package) => pkg.distanceFromHaram },
     { key: 'distanceFromMasjidENabawi', label: 'Distance from Masjid e Nabawi', render: (pkg: Package) => pkg.distanceFromMasjidENabawi },
     { key: 'food', label: 'Food', render: (pkg: Package) => pkg.food },

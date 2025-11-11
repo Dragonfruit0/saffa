@@ -45,6 +45,9 @@ export function Header() {
                 <MobileNav />
                 <div className="flex flex-1 items-center justify-end space-x-4">
                     <nav className="flex items-center space-x-2">
+                        <Link href="/packages">
+                            <Button variant="ghost">Packages</Button>
+                        </Link>
                         <div className="flex items-center space-x-2">
                             <Switch id="compare-mode" checked={isCompareMode} onCheckedChange={toggleCompareMode} />
                             <label htmlFor="compare-mode">Compare</label>

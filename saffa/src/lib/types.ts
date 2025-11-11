@@ -31,10 +31,10 @@ export type Testimonial = {
 
 export type UserProfile = {
   uid: string;
-  name?: string;
-  email?: string;
-  photoURL?: string;
-  phoneNumber?: string;
+  name?: string | null | undefined;
+  email?: string | null | undefined;
+  photoURL?: string | null | undefined;
+  phoneNumber?: string | null | undefined;
   gender?: 'Male' | 'Female' | 'Other';
   dob?: string;
   address?: {

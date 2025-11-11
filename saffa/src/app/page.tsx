@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import type { Package } from '@/lib/types';
@@ -62,9 +62,10 @@ export default function HomePage() {
   };
   
   const handleMoreInfo = (pkg: Package) => {
-    handleProtectedAction(() => {
-      trackPackageClick(pkg, user!);
-    });
+    if (user) {
+      trackPackageClick(pkg, user);
+    }
+    router.push(`/more-info?id=${pkg.id}`);
   }
   
   const handleBookNow = (pkg: Package) => {

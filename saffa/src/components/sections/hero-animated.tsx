@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useEffect, useState, useMemo } from 'react';
 import Particles, { initParticlesEngine } from "@tsparticles/react";
+import type { Container } from "@tsparticles/engine";
 import { loadLinksPreset } from "@tsparticles/preset-links";
 import { useRouter } from 'next/navigation';
 import { Calendar } from '@/components/ui/calendar';
@@ -31,12 +32,12 @@ export function HeroAnimated() {
     const timer = setTimeout(() => {
       setShowBismillah(false);
       setShowContent(true);
-    }, 5000); // Show Bismillah for 5 seconds
+    }, 3000); // Show Bismillah for 5 seconds
 
     return () => clearTimeout(timer);
   }, []);
 
-  const particlesLoaded = async (container) => {
+  const particlesLoaded = async (container: Container | undefined) => {
     console.log(container);
   };
 
